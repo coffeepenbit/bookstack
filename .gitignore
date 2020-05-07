@@ -1,6 +1,7 @@
 # Project specific
 tests/*
 !tests/test_models.py
+!tests/test_readme.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
