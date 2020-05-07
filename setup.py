@@ -52,6 +52,7 @@ setup(
     long_description_content_type='text/markdown',
     packages=find_packages('src'),    
     package_dir={'': 'src'},
+    python_requires='>=3.6',
     install_requires=INSTALL_REQUIRES,
     extras_require=EXTRAS_REQUIRE,
     classifiers=CLASSIFIERS
