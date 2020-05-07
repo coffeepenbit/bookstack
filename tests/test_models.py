@@ -40,37 +40,33 @@ class TestBookStack:
         assert token_id == token_id
         assert token_secret == token_secret
 
-    # @staticmethod
-    # @pytest.mark.vcr()
-    # def test_get_docs(fixture_bookstack):
-    #     test_result = fixture_bookstack._get_docs()
-
-    #     assert test_result
-    #     assert isinstance(test_result, dict)
-    #     assert all(key in test_result.keys() for key in ['docs'])        
-
     @staticmethod
-    # @pytest.mark.vcr()
-    def test_api(fixture_bookstack):
-        test_result = fixture_bookstack._api
+    def test_generate_api_methods(fixture_bookstack, fixture_api_info):
+        fixture_bookstack.generate_api_methods()
 
-        assert isinstance(test_result, bookstack.models.API)
-
-    @staticmethod
-    def test_methods(fixture_bookstack):
-        test_result = fixture_bookstack.methods()
-
-        assert 'books_export_plain_text' in test_result
-        assert '_create_methods' not in test_result
-
-    @staticmethod
-    def test_reset_api(fixture_bookstack):
-        raise NotImplementedError
+        assert 'get_books_list' in fixture_bookstack.available_api_methods
+        assert 'get_books_list' in dir(fixture_bookstack)
 
     @staticmethod
     @pytest.mark.vcr()
-    def test_get_books(fixture_bookstack):
-        test_result = fixture_bookstack.get_books()
+    def test_get_docs_json(fixture_bookstack):
+        test_result = fixture_bookstack.get_docs_json()
+
+        assert test_result
+        assert isinstance(test_result, dict)
+        assert all(key in test_result.keys() for key in ['docs'])        
+
+    @staticmethod
+    def test_available_api_methods(fixture_bookstack):
+        test_result = fixture_bookstack.available_api_methods
+
+        assert 'get_books_export_plain_text' in test_result
+        assert '_create_methods' not in test_result
+
+    @staticmethod
+    @pytest.mark.vcr()
+    def test_get_books_list(fixture_bookstack):
+        test_result = fixture_bookstack.get_books_list()
 
         assert test_result
         assert isinstance(test_result, dict)
@@ -78,8 +74,8 @@ class TestBookStack:
 
     @staticmethod
     @pytest.mark.vcr()
-    def test_read_book(fixture_bookstack):
-        test_result = fixture_bookstack.read_book(1)
+    def test_get_books_read(fixture_bookstack):
+        test_result = fixture_bookstack.get_books_read(id=2)
 
         assert test_result
         assert isinstance(test_result, dict)
@@ -88,30 +84,16 @@ class TestBookStack:
 
     @staticmethod
     @pytest.mark.vcr()
-    def test_export_text(fixture_bookstack):
-        test_result = fixture_bookstack.export_text(1)
+    def test_get_books_export_plain_text(fixture_bookstack):
+        test_result = fixture_bookstack.get_books_export_plain_text(id=2)
 
         assert test_result
         assert isinstance(test_result, str)
 
     @staticmethod
     @pytest.mark.vcr()
-    def test_export_html(fixture_bookstack):
-        test_result = fixture_bookstack.export_html(1)
+    def test_get_books_export_html(fixture_bookstack):
+        test_result = fixture_bookstack.get_books_export_html(id=2)
 
         assert test_result
         assert isinstance(test_result, str)
-
-
-class TestAPI:
-    @staticmethod
-    def test_intiialize_empty():
-        with pytest.raises(TypeError):
-            bookstack.models.API() # pylint: disable=no-value-for-parameter
-    
-    @staticmethod
-    def test_initialize(api_info):
-        test_result = bookstack.models.API(api_info)
-
-        assert test_result
-
