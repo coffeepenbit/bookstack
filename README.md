@@ -1,8 +1,4 @@
 # bookstack
-*version: 0.1.0-beta*
-
-**Please note that this project is currently in an unstable state. Please be patient.**
-
 A Python wrapper for [BookStack's](https://www.bookstackapp.com) API
 
 # Installation
