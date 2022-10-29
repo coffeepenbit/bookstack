@@ -44,15 +44,14 @@ class BookStack:
         return self._session.request('GET', self._api_path).json()
 
     def _create_api_method(self, method_info):
-        def request_method(**kwargs):
-        def request_method(**kwargs):
+        def request_method(*args):
             response = self._session.request(
                 method_info['method'],
-                method_info['uri'].format(**kwargs)
+                method_info['uri'].format(*args)
             ) if method_info['method'] != "POST" else self._session.request(
                 method_info['method'],
                 method_info['uri'],
-                **kwargs
+                *args
             )
             
             return self._get_response_content(response)
