@@ -51,7 +51,7 @@ class BookStack:
             ) if method_info['method'] != "POST" else self._session.request(
                 method_info['method'],
                 method_info['uri'],
-                *args
+                json=args[0]
             )
             
             return self._get_response_content(response)

@@ -43,3 +43,9 @@ The above are then the methods available to you, for example:
 >>> books_list['data'][0]['name']
 'Mathematics'
 ```
+
+And to POST you can follow this example:
+
+```python
+>>> api.post_books_create({'name', 'Sample Book', 'description': 'Sample Description', 'tags': [{ 'name': 'Sample-Name', 'value': 'Sample-Value' }] })
+```
