@@ -53,11 +53,10 @@ class BookStack:
                     del arg[0]["id"]
                 except:
                     pass
-            response = self._session.request(method_info['method'], uri.format(arg))
             if method_info['method'] == "POST" or method_info['method'] == "PUT":
-                self._session.request(method_info['method'], uri, json=arg[0])
+                response = self._session.request(method_info['method'], uri, json=arg[0])
             else:
-                self._session.request(method_info['method'], uri.format(arg))
+                response = self._session.request(method_info['method'], uri.format(arg))
             return self._get_response_content(response)
         return request_method
 
