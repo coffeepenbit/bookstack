@@ -4,4 +4,4 @@ __author_email__ = 'coffeepenbit@gmail.com'
 __maintainer__ = 'coffeepenbit'
 __title__ = 'bookstack'
 __url__ = "https://github.com/coffeepenbit/bookstack"
-__version__ = '0.1.0-beta'
+__version__ = '0.2.0-post1'

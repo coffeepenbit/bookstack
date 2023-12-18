@@ -1,6 +1,8 @@
 # bookstack
 A Python wrapper for [BookStack's](https://www.bookstackapp.com) API
 
+Current version: 0.2.0-post1
+
 # Installation
 To install `bookstack`, run:
 

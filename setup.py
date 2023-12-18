@@ -9,11 +9,8 @@ CLASSIFIERS = [
 EXTRAS_REQUIRE = {
     'dev': [
         'bump2version',
-        'pylint',
-        'pytest',
-        'pytest-cov',
-        'pytest-vcr',
-        'tox'
+        'setuptools',
+        'twine'
     ]
 }
 INSTALL_REQUIRES = [
@@ -50,7 +47,7 @@ setup(
     author=about['__author__'],
     author_email=about['__author_email__'],
     long_description_content_type='text/markdown',
-    packages=find_packages('src'),    
+    packages=find_packages('src'),
     package_dir={'': 'src'},
     python_requires='>=3.6',
     install_requires=INSTALL_REQUIRES,
