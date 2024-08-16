@@ -16,7 +16,8 @@ EXTRAS_REQUIRE = {
 INSTALL_REQUIRES = [
     'requests>= 2.18, < 3',
     'cached_property >= 1.5, < 2',
-    'inflection == 0.4'
+    'inflection == 0.4',
+    'requests-ratelimiter == 0.7.0',
 ]
 
 
