@@ -1,11 +1,12 @@
 from json.decoder import JSONDecodeError
 import string
 import urllib
+import time
 
 from cached_property import cached_property
 import inflection
 import requests
-
+from requests_ratelimiter import LimiterSession
 
 API_PATH = 'api/docs.json/'
 
@@ -19,12 +20,13 @@ class BookStack:
                 api_path=API_PATH
             ):
         self.api_base_url = base_url
-        self.token_id = None
-        self.token_secret = None
+        self.token_id = token_id
+        self.token_secret = token_secret
         self._api_path = api_path
+        self.rate_limit=180 # Bookstack default
 
         self.available_api_methods = set()
-        self._session = BaseURLSession(self.api_base_url)
+        self._session = BaseURLSession(self.api_base_url, per_minute=self.rate_limit)
         self._session.auth = Auth(token_id, token_secret)
 
     def generate_api_methods(self):
@@ -41,7 +43,16 @@ class BookStack:
                 self.available_api_methods.add(method_name)
 
     def _get_api(self):
-        return self._session.request('GET', self._api_path).json()
+        r = self._session.request('GET', self._api_path)
+
+        rate_limit = int(r.headers.get('X-RateLimit-Limit', self.rate_limit))
+        if rate_limit != self.rate_limit:
+            # Create a new rate limited session with the correct rate limit
+            self._session = BaseURLSession(self.api_base_url, per_minute=self.rate_limit)
+            self._session.auth = Auth(self.token_id, self.token_secret)
+            self.rate_limit = rate_limit
+
+        return r.json()
 
     def _create_api_method(self, method_info):
         def request_method(*args, **kwargs):
@@ -85,15 +96,22 @@ class BookStack:
         return content
 
 
-class BaseURLSession(requests.Session):
+class BaseURLSession(LimiterSession):
     def __init__(self, base_url, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.base_url = base_url
 
     def request(self, method, url_path, *args, **kwargs):
         url = urllib.parse.urljoin(self.base_url, url_path)
-        
-        return super().request(method, url, *args, **kwargs)
+        response = super().request(method, url, *args, **kwargs)
+
+        # Handle 'Too Many Attempts' response
+        if response.status_code == 429:
+            retry_after = int(response.headers.get('Retry-After', 60))
+            time.sleep(retry_after)
+            response = super().request(method, url, *args, **kwargs)
+
+        return response
 
 
 class Auth(requests.auth.AuthBase):
